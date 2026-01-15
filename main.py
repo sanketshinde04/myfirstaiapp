@@ -1,7 +1,6 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain import LLMChain
-from langchain import PromptTemplate
-
+from langchain_classic.chains import LLMChain
+from langchain_core.prompts import PromptTemplate
 import streamlit as st
 import os
 
@@ -14,14 +13,12 @@ tweet_template = "Give me {number} tweets on {topic}"
 tweet_prompt = PromptTemplate(template = tweet_template, input_variables = ['number', 'topic'])
 
 # Initialize Google's Gemini model
-gemini_model = ChatGoogleGenerativeAI(model = "gemini-1.5-flash-latest")
+gemini_model = ChatGoogleGenerativeAI(model = "gemini-2.5-flash")
 
 
 # Create LLM chain using the prompt template and model
 tweet_chain = tweet_prompt | gemini_model
 
-
-import streamlit as st
 
 st.header("Tweet Generator - SATVIK")
 

@@ -1,24 +1,10 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_classic.chains import LLMChain
-from langchain_core.prompts import PromptTemplate
+from google import genai
 import streamlit as st
 import os
-
-os.environ['GOOGLE_API_KEY'] = st.secrets['GOOGLE_API_KEY']
 
 # Create prompt template for generating tweets
 
 tweet_template = "Give me {number} tweets on {topic}"
-
-tweet_prompt = PromptTemplate(template = tweet_template, input_variables = ['number', 'topic'])
-
-# Initialize Google's Gemini model
-gemini_model = ChatGoogleGenerativeAI(model = "gemini-2.5-flash")
-
-
-# Create LLM chain using the prompt template and model
-tweet_chain = tweet_prompt | gemini_model
-
 
 st.header("Tweet Generator - SATVIK")
 
@@ -29,6 +15,19 @@ topic = st.text_input("Topic")
 number = st.number_input("Number of tweets", min_value = 1, max_value = 10, value = 1, step = 1)
 
 if st.button("Generate"):
-    tweets = tweet_chain.invoke({"number" : number, "topic" : topic})
-    st.write(tweets.content)
+    client = genai.Client(api_key=st.secrets['GOOGLE_API_KEY'])
+    prompt = tweet_template.format(number=number, topic=topic)
+    response = client.models.generate_content(
+        model="gemini-3.1-flash-lite-preview",
+        contents=prompt
+    )
+    
+    # Extract only the text parts manually to avoid the "non-text parts" warning
+    final_text = ""
+    if response.candidates and response.candidates[0].content.parts:
+        for part in response.candidates[0].content.parts:
+            if hasattr(part, 'text') and part.text:
+                final_text += part.text
+                
+    st.write(final_text)
     

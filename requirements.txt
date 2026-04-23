@@ -1,5 +1,3 @@
-langchain
-langchain-openai
-langchain-google-genai
+google-genai
+openai>=2.32.0
 streamlit
-langchain-classic

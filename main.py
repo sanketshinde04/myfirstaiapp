@@ -6,9 +6,9 @@ import os
 
 tweet_template = "Give me {number} tweets on {topic}"
 
-st.header("Tweet Generator - SATVIK")
+st.header(":bird: AI Tweet Generator")
 
-st.subheader("Generate tweets using Generative AI")
+st.subheader(":heart: Made with Build Fast with AI")
 
 topic = st.text_input("Topic")
 
